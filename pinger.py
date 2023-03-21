@@ -6,6 +6,8 @@ import time
 import select
 import binascii
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ICMP_ECHO_REQUEST = 8
 
