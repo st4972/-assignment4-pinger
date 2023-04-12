@@ -56,11 +56,11 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         type, code, checksum, packetid, seq = struct.unpack('bbHHh', icmpheader)
         if packetid == ID:
             doublebytes = struct.calcsize('d')
-            timeSent = struct.unpack('d', recPacket[28:28 + doublebytes])[0]
+            #timeSent = struct.unpack('d', recPacket[28:28 + doublebytes])[0]
             ipheader = recPacket[:20]
             ttl = struct.unpack('B', ipheader[8:9])[0]
-            delay = timeReceived - timeSent
-            return delay, (len(recPacket), ttl)
+            #delay = timeReceived - timeSent
+            return timeReceived, (len(recPacket), ttl)
         # Fill in end
         timeLeft = timeLeft - howlong
         if timeLeft <= 0:
