@@ -57,9 +57,9 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         if packetID == ID:
             BytesInDouble = struct.calcsize('d')
             timeSent = struct.unpack('d', recPacket[28:28 + BytesInDouble])[0]
-            return timeReceived - timeSent
+            return timeReceived - timeSent, (len(recPacket), recPacket[8], recPacket[ttl])
         else:
-            return 'Different ID'
+            return 'Different ID', None
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
         if timeLeft <= 0:
@@ -131,7 +131,7 @@ def ping(host, timeout=1):
     packet_recv = 0
     # fill in start. UPDATE THE QUESTION MARKS
     for index, row in response.iterrows():
-        if row['rtt'] == -1:  # access your response df to determine if you received a packet or not
+        if row['rtt'] == 0:  # access your response df to determine if you received a packet or not
             packet_lost += 1 # ????
         else:
             packet_recv += 1 # ????
