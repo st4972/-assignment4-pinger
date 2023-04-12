@@ -57,7 +57,9 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         if packetID == ID:
             BytesInDouble = struct.calcsize('d')
             timeSent = struct.unpack('d', recPacket[28:28 + BytesInDouble])[0]
-            return timeReceived - timeSent, (len(recPacket), recPacket[8], recPacket[ttl])
+            IPHeader = recPacket[:20]
+            ttl = struct.unpack('B', IPHeader[8:9])[0]
+            return timeReceived - timeSent, (len(recPacket), recPacket[8], ttl)
         else:
             return 'Different ID', None
         # Fill in end
