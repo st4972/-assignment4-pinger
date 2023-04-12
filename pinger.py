@@ -145,7 +145,7 @@ def ping(host, timeout=1):
     # fill in calculation for packet_min, packet_avg, packet_max, and stdev
     vars = pd.DataFrame(columns=['min', 'avg', 'max', 'stddev'])
     if packet_recv == 0:
-        vars = vars.append({'min':0, 'avg': 0.0,'max': 0,'stddev': 0.0}, ignore_index=True)
+        vars = vars.append({'min':'0', 'avg': '0.0','max': '0','stddev': '0.0'}, ignore_index=True)
     else:
      vars = vars.append({'min': str(round(response['rtt'].min(), 2)), 'avg': str(round(response['rtt'].mean(), 2)),
                         'max': str(round(response['rtt'].max(), 2)), 'stddev': str(round(response['rtt'].std(), 2))},
@@ -156,4 +156,3 @@ def ping(host, timeout=1):
 
 if __name__ == '__main__':
     ping("google.com")
-    
