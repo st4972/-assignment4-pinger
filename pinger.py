@@ -42,7 +42,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
     while 1:
         startedSelect = time.time()
         whatReady = select.select([mySocket], [], [], timeLeft)
-        howLongInSelect = (time.time() - startedSelect)
+        howlong = (time.time() - startedSelect)
         if whatReady[0] == []:  # Timeout
             return "Request timed out."
 
@@ -52,17 +52,18 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         # Fill in start
 
         # Fetch the ICMP header from the IP packet
-        ICMPHeader = recPacket[20:28]
-        Type, Code, Checksum, packetID, Sequence = struct.unpack('bbHHh', ICMPHeader)
-        if packetID == ID:
+        icmpheader = recPacket[20:28]
+        type, code, checksum, packetid, seq = struct.unpack('bbHHh', icmpheader)
+        if packetid == ID:
+            BytesInDouble = struct.calcsize('d')
             timeSent = struct.unpack('d', recPacket[28:28 + BytesInDouble])[0]
-            IPHeader = recPacket[:20]
-            ttl = struct.unpack('B', IPHeader[8:9])[0]
+            ipheader = recPacket[:20]
+            ttl = struct.unpack('B', ipheader[8:9])[0]
             return timeReceived - timeSent, (len(recPacket), recPacket[8], ttl)
-        else:
-            return 'Different ID', None
+        elif packetid != ID:
+            return 'ID Does not Match', None
         # Fill in end
-        timeLeft = timeLeft - howLongInSelect
+        timeLeft = timeLeft - howlong
         if timeLeft <= 0:
             return "Request timed out."
 
