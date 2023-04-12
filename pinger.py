@@ -124,7 +124,7 @@ def ping(host, timeout=1):
 
     for i in range(0, 4):  # Four pings will be sent (loop runs for i=0, 1, 2, 3)
         delay, statistics = doOnePing(dest, timeout)  # what is stored into delay and statistics?
-        response = response.append({'bytes': statistics[0], 'rtt': delay, 'ttl': statistics[2]}, ignore_index=True)
+        response = response._append({'bytes': statistics[0], 'rtt': delay, 'ttl': statistics[2]}, ignore_index=True)
         # store your bytes, rtt, and ttle here in your response pandas dataframe. An example is commented out below for vars
         print(delay)
         time.sleep(1)  # wait one second
@@ -143,7 +143,7 @@ def ping(host, timeout=1):
     # fill in calculation for packet_min, packet_avg, packet_max, and stdev
     vars = pd.DataFrame(columns=['min', 'avg', 'max', 'stddev'])
     if packet_recv == 0:
-     vars = pd.DataFrame([['0', '0.0', '0', '0.0']], columns=['min', 'avg', 'max', 'stddev'])
+        vars = vars.append({'min':'0', 'avg': '0.0','max': '0','stddev': '0.0'}, ignore_index=True)
     else:
      vars = vars.append({'min': str(round(response['rtt'].min(), 2)), 'avg': str(round(response['rtt'].mean(), 2)),
                         'max': str(round(response['rtt'].max(), 2)), 'stddev': str(round(response['rtt'].std(), 2))},
