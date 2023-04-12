@@ -61,8 +61,6 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
             ttl = struct.unpack('B', ipheader[8:9])[0]
             delay = timeReceived - timeSent
             return delay, (len(recPacket), ttl)
-        elif packetid != ID:
-            return 'ID Does not Match', None, None, None
         # Fill in end
         timeLeft = timeLeft - howlong
         if timeLeft <= 0:
