@@ -60,7 +60,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
             ipheader = recPacket[:20]
             ttl = struct.unpack('B', ipheader[8:9])[0]
             delay = timeReceived - timeSent
-            return delay, (len(recPacket), recPacket[8], ttl)
+            return delay, (len(recPacket), ttl)
         elif packetid != ID:
             return 'ID Does not Match', None, None, None
         # Fill in end
@@ -125,7 +125,7 @@ def ping(host, timeout=1):
 
     for i in range(0, 4):  # Four pings will be sent (loop runs for i=0, 1, 2, 3)
         delay, statistics = doOnePing(dest, timeout)  # what is stored into delay and statistics?
-        response = response.append({'bytes': statistics[0], 'rtt': delay, 'ttl': statistics[2]}, ignore_index=True)
+        response = response.append({'bytes': statistics[0], 'rtt': delay, 'ttl': statistics[1]}, ignore_index=True)
         # store your bytes, rtt, and ttle here in your response pandas dataframe. An example is commented out below for vars
         print(delay)
         print(statistics)
