@@ -55,13 +55,14 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         icmpheader = recPacket[20:28]
         type, code, checksum, packetid, seq = struct.unpack('bbHHh', icmpheader)
         if packetid == ID:
-            BytesInDouble = struct.calcsize('d')
-            timeSent = struct.unpack('d', recPacket[28:28 + BytesInDouble])[0]
+            doublebytes = struct.calcsize('d')
+            timeSent = struct.unpack('d', recPacket[28:28 + doublebytes])[0]
             ipheader = recPacket[:20]
             ttl = struct.unpack('B', ipheader[8:9])[0]
-            return timeReceived - timeSent, (len(recPacket), recPacket[8], ttl)
+            delay = timeReceived - timeSent
+            return delay, (len(recPacket), recPacket[8], ttl)
         elif packetid != ID:
-            return 'ID Does not Match', None
+            return 'ID Does not Match', None, None, None
         # Fill in end
         timeLeft = timeLeft - howlong
         if timeLeft <= 0:
@@ -127,6 +128,7 @@ def ping(host, timeout=1):
         response = response.append({'bytes': statistics[0], 'rtt': delay, 'ttl': statistics[2]}, ignore_index=True)
         # store your bytes, rtt, and ttle here in your response pandas dataframe. An example is commented out below for vars
         print(delay)
+        print(statistics)
         time.sleep(1)  # wait one second
 
     packet_lost = 0
@@ -138,7 +140,7 @@ def ping(host, timeout=1):
         else:
             packet_recv += 1 # ????
     # fill in end
-
+    print(packet_lost, packet_recv)
     # You should have the values of delay for each ping here structured in a pandas dataframe;
     # fill in calculation for packet_min, packet_avg, packet_max, and stdev
     vars = pd.DataFrame(columns=['min', 'avg', 'max', 'stddev'])
@@ -154,4 +156,4 @@ def ping(host, timeout=1):
 
 if __name__ == '__main__':
     ping("google.com")
-    ping("nyu.edu")
+    
